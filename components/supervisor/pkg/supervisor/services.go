@@ -14,9 +14,10 @@ import (
 	csapi "github.com/gitpod-io/gitpod/content-service/api"
 	"github.com/gitpod-io/gitpod/supervisor/api"
 	"github.com/gitpod-io/gitpod/supervisor/pkg/backup"
+	"github.com/gitpod-io/gitpod/supervisor/pkg/ports"
 	ndeapi "github.com/gitpod-io/gitpod/ws-manager-node/api"
-
 	"github.com/golang/protobuf/ptypes"
+
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -40,7 +41,7 @@ type RegisterableRESTService interface {
 
 type statusService struct {
 	IWH      *backup.InWorkspaceHelper
-	Ports    *portsManager
+	Ports    *ports.Manager
 	Tasks    *tasksManager
 	IDEReady <-chan struct{}
 }
@@ -119,7 +120,7 @@ func (s *statusService) BackupStatus(ctx context.Context, req *api.BackupStatusR
 
 func (s *statusService) PortsStatus(req *api.PortsStatusRequest, srv api.StatusService_PortsStatusServer) error {
 	err := srv.Send(&api.PortsStatusResponse{
-		Ports: s.Ports.ServedPorts(),
+		Ports: s.Ports.Status(),
 	})
 	if err != nil {
 		return err
