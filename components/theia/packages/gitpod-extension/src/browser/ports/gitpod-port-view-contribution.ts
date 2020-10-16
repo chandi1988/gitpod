@@ -10,7 +10,7 @@ import { MessageService } from "@theia/core";
 import { GitpodPortViewWidget, PORT_WIDGET_FACTORY_ID } from "./gitpod-port-view-widget";
 import { GitpodPortsService, PortChangeEvent, PortChange } from "./gitpod-ports-service";
 import { MiniBrowserOpenHandler } from "@theia/mini-browser/lib/browser/mini-browser-open-handler";
-import { ServedPort } from "../../common/served-ports-service";
+import { ServedPort } from "../../common/gitpod-port-server";
 import { PortConfig } from "@gitpod/gitpod-protocol";
 import { PROBLEM_KIND } from "@theia/markers/lib/common/problem-marker";
 
@@ -56,7 +56,7 @@ export class GitpodPortViewContribution extends AbstractViewContribution<GitpodP
     }
 
     protected async initializeNotifier(): Promise<void> {
-        this.portsService.onPortsChanged(e => this.onPortsChanged(e));
+        this.portsService.onDidChange(e => this.onPortsChanged(e));
 
         // Check if some ports were already served before we could add a listener.
         const servedPorts = await this.portsService.servedPorts;

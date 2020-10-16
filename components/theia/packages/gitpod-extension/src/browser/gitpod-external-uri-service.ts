@@ -21,8 +21,8 @@ export class GitpodExternalUriService extends ExternalUriService {
         }
 
         // Actually expose the port
-        let { config } = await this.portsService.findPortConfig(localhost.port);
-        if (!config) {
+        const port = await this.portsService.getPort(localhost.port)
+        if (!port?.exposed) {
             await this.portsService.openPort({
                 port: localhost.port,
                 onOpen: 'ignore'

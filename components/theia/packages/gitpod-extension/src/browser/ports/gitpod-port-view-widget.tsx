@@ -9,7 +9,7 @@ import "../../../styles/port-view.css";
 import { ReactWidget } from "@theia/core/lib/browser/widgets/react-widget";
 import React = require("react");
 import { injectable, inject, postConstruct } from "inversify";
-import { ExposedPort, ServedPort } from "../../common/served-ports-service";
+import { ExposedPort, ServedPort } from "../../common/gitpod-port-server";
 import { GitpodServiceProvider } from "../gitpod-service-provider";
 import { PortConfig, PortVisibility } from "@gitpod/gitpod-protocol";
 import { MiniBrowserOpenHandler } from "@theia/mini-browser/lib/browser/mini-browser-open-handler";
@@ -96,7 +96,7 @@ class GitpodPortViewComponent extends React.Component<GitpodPortViewProps, Gitpo
     protected readonly toDisposeOnUnmount = new DisposableCollection();
     async componentDidMount(): Promise<void> {
         this.toDisposeOnUnmount.push(
-            this.props.portsService.onPortsChanged(e => {
+            this.props.portsService.onDidChange(e => {
                 if (e.exposed || e.served) {
                     this.setState(oldState => {
                         return {
